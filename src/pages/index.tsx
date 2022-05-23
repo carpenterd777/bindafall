@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 
-export default function Home() {
+export const Home = () => {
   return (
     <div >
       <Head>
@@ -66,3 +66,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default Home;

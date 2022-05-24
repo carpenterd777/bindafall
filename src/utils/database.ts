@@ -107,6 +107,21 @@ class Database {
     )(id);
   }
 
+  async is_two_sided(id: string): Promise<boolean> {
+    const table = parsed.get(this);
+    if (table === undefined)
+      throw new Error("is_two_sided: database could not be found");
+
+    const results = table.filter(card_data => {
+      return (
+        card_data[CardField.BACKSIDE_FILE] !== "" &&
+        card_data[CardField.ID] === id
+      );
+    });
+
+    return results.length === 1;
+  }
+
   // Private methods
   _map_from_field_to_field(
     src_field: number,

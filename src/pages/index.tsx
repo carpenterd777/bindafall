@@ -2,21 +2,26 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
+import Card from "../components/card";
 import Database from "../utils/database";
 
-const useCardCount = () => {
+const useCounts = () => {
   const db = new Database();
   const [count, setCount] = useState<number>();
+  const [nontoken, setNontoken] = useState<number>();
+  const [token, setToken] = useState<number>();
   useEffect(() => {
     void (async () => {
       setCount(await db.card_count());
+      setNontoken(await db.nontoken_count());
+      setToken(await db.token_count());
     })();
-  }, [count]);
-  return count;
+  }, [count, nontoken, token]);
+  return { count, nontoken, token };
 };
 
 export const Home = (): JSX.Element => {
-  const count = useCardCount();
+  const { count, nontoken } = useCounts();
 
   return (
     <div>
@@ -47,8 +52,19 @@ export const Home = (): JSX.Element => {
           </div>
         </div>
 
-        <div className="mx-[9em] my-6">
-          <div className="w-full bg-red-300 h-[1px] block"></div>
+        <div className="mx-36 my-6 text-center">
+          <h2 className="text-red-500">
+            IN BOOSTERS
+            {nontoken ? ` • ${nontoken.toString()} cards` : ""}
+          </h2>
+          <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
+          <div className="grid gap-x-2 gap-y-2 grid-cols-4">
+            {[...Array(nontoken ? nontoken : 0).keys()]
+              .map((_, index) => index + 1)
+              .map(id => {
+                return <Card id={id.toString()} />;
+              })}
+          </div>
         </div>
       </main>
     </div>

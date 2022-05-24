@@ -1,6 +1,6 @@
 // HACK: move data to a real csv file
 export const data = `id,name,image_file,is_token?,backside_file
-1,"Ambiville Ironstoad // Ambiville, Mystra's Kin",Ambiville Ironstoad.png,,Ambiville Mystras Kin.png
+1,"Ambiville Ironstoad // Ambiville, Mystra's Kin",Ambiville Ironstoad.png,,Ambiville Mystra's Kin.png
 2,Glimpse Ragnarök,Glimpse Ragnarök.png,,
 3,Healing Verse,Healing Verse.png,,
 4,Hug the Yeti,Hug the Yeti.png,,

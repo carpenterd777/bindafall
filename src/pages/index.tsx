@@ -1,8 +1,23 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
+import Database from "../utils/database";
+
+const useCardCount = () => {
+  const db = new Database();
+  const [count, setCount] = useState<number>();
+  useEffect(() => {
+    void (async () => {
+      setCount(await db.card_count());
+    })();
+  }, [count]);
+  return count;
+};
 
 export const Home = (): JSX.Element => {
+  const count = useCardCount();
+
   return (
     <div>
       <Head>
@@ -25,12 +40,14 @@ export const Home = (): JSX.Element => {
             </div>
             <div>
               <div className="font-bold text-lg">Rise to Ragnarök (RTR)</div>
-              <div className="text-sm">75 cards • Released 2022-05-28</div>
+              <div className="text-sm">
+                {count ? `${count.toString()} cards •` : ""} Released 2022-05-28
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mx-[3em] my-6">
+        <div className="mx-[9em] my-6">
           <div className="w-full bg-red-300 h-[1px] block"></div>
         </div>
       </main>

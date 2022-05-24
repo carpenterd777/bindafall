@@ -5,6 +5,14 @@ import { data } from "./data";
 // maps for private variable storage
 const parsed = new WeakMap<ThisType<Database>, Array<Array<string>>>();
 
+enum CardField {
+  ID,
+  NAME,
+  IMAGE_FILE,
+  IS_TOKEN,
+  BACKSIDE_FILE,
+}
+
 /**
  * Handles all database operations.
  */
@@ -40,13 +48,18 @@ class Database {
 
     // find the length of the array of tokens
     return table.filter(card_data => {
-      const id = card_data[0];
-      if (id === undefined) throw new Error("token_count: card missing id");
+      const is_token = card_data[3];
+      if (is_token === undefined)
+        throw new Error("token_count: card missing id");
       // tokens have an id starting with T
-      return id[0] === "T";
+      return is_token === "Y";
     }).length;
   }
 
+  /**
+   * Counts the number of nontoken cards are in the database.
+   * @returns the number of nontoken cards
+   */
   async nontoken_count(): Promise<number> {
     // check if table exists
     const table = parsed.get(this);
@@ -59,31 +72,70 @@ class Database {
     return card_count - token_count;
   }
 
+  /**
+   * Gets the path of the backside image from the database.
+   * @param id the id of the card of which to get the backside image of
+   * @returns the path leading to the backside image
+   */
   async backside_image_filepath_of(id: string): Promise<string> {
-    const table = parsed.get(this);
-    if (table === undefined)
-      throw new Error(
-        "backside_image_filepath_of: database could not be found"
-      );
+    return this._map_from_field_to_field(
+      CardField.ID,
+      CardField.BACKSIDE_FILE,
+      "backside_image_filepath_of",
+      "backside image filepath",
+      false
+    )(id);
+  }
 
-    const results = table.filter(card_data => {
-      const _id = card_data[0];
-      if (_id === undefined)
-        throw new Error("backside_image_filepath_of: card missing id");
-      return _id === id;
-    });
+  async image_filepath_of(id: string): Promise<string> {
+    return this._map_from_field_to_field(
+      CardField.ID,
+      CardField.IMAGE_FILE,
+      "image_filepath_of",
+      "image filepath",
+      false
+    )(id);
+  }
 
-    if (results.length === 0 || results[0] === undefined)
-      throw new Error(`backside_image_filepath_of: no card with id ${id}`);
+  // Private methods
+  _map_from_field_to_field(
+    src_field: number,
+    dest_field: number,
+    name: string,
+    field_name: string,
+    tokens: boolean
+  ): (src: string) => Promise<string> {
+    return async (src: string): Promise<string> => {
+      // check if table exists
+      const table = parsed.get(this);
+      if (table === undefined)
+        throw new Error(`${name}: database could not be found`);
 
-    const path = results[0][4];
+      // filter out all cards that do not have a field like src, result will be first index in array
+      const results = table.filter(card_data => {
+        const _src = card_data[src_field];
+        const _is_token = card_data[3];
+        if (_src === undefined)
+          throw new Error(`${name}: card missing ${field_name}`);
+        if (tokens) {
+          return src === _src && _is_token === "Y";
+        }
+        return src === _src && _is_token !== "Y";
+      });
 
-    if (path === undefined)
-      throw new Error(
-        "backside_image_filepath_of: card missing backside_image_file"
-      );
+      // check that there was at least 1 match
+      if (results.length === 0 || results[0] === undefined)
+        throw new Error(`${name}: no card with ${field_name} ${src}`);
 
-    return path;
+      // get the first match and its data
+      const _dest = results[0][dest_field];
+
+      // check that something is there
+      if (_dest === undefined)
+        throw new Error(`${name}: card missing ${field_name}`);
+
+      return _dest;
+    };
   }
 }
 

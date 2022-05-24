@@ -39,7 +39,7 @@ export const data = `id,name,image_file,is_token?,backside_file
 37,Motivated Karl,Motivated Karl.png,,
 38,Ransack the Estates,Ransack the Estates.png,,
 39,Stone Worm,Stone Worm.png,,
-40,"Throvaela, Vandr Killer // The Coven of Isstnar",Throvaela Vandr Killer.png,,The Coven of Isstnar.png
+40,"Throvaela, Vandr Killer // The Coven of Isstnar",Thorvaela Vandr Killer.png,,The Coven of Isstnar.png
 41,"Will, Defiant Convict",Will Defiant Convict.png,,
 42,Apothecary Volva,Apothecary Volva.png,,
 43,Basilisk Wasp,Basilisk Wasp.png,,
@@ -57,7 +57,7 @@ export const data = `id,name,image_file,is_token?,backside_file
 55,Seiðr-cursed Bairn,Seidr-cursed Bairn.png,,
 56,"Sigurda, Jardhus's Finest",Sigurda Jardhuss Finest.png,,
 57,"Thorkell, Jomsviking",Thorkell Jomsviking.png,,
-58,Throvaela's Axe,Throvaelas Axe.png,,
+58,Throvaela's Axe,Thorvaelas Axe.png,,
 59,"Vrækæ, Tyrant of Old",Vrækæ Tyrant of Old.png,,
 60,Yrsa's Bargain,Yrsas Bargain.png,,
 61,Sleeping Frue,Sleeping Frue.png,,
@@ -65,7 +65,7 @@ export const data = `id,name,image_file,is_token?,backside_file
 63,Bracelet of Yrsa,Bracelet of Yrsa.png,,
 64,Political Map of Gardarík,Political Map of Gardarík.png,,
 65,"Rauthrn, Biting Glaive // Rauthrn, Dissolver of Steel",Rauthrn Biting Glaive.png,,Rauthrn Dissolver of Steel.png
-66,Yngvi's Carraige,Yngvis Carraige.png,,
+66,Yngvi's Carraige,Yngvis Carriage.png,,
 67,The Ashen Rose,The Ashen Rose.png,,
 68,Black Market of Jardhus,Black Market of Jardhus.png,,
 69,Holmium Mines,Holmium Mines.png,,

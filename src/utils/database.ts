@@ -97,6 +97,16 @@ class Database {
     )(id);
   }
 
+  async token_image_filepath_of(id: string): Promise<string> {
+    return this._map_from_field_to_field(
+      CardField.ID,
+      CardField.IMAGE_FILE,
+      "token_image_filepath_of",
+      "image filepath",
+      true
+    )(id);
+  }
+
   // Private methods
   _map_from_field_to_field(
     src_field: number,

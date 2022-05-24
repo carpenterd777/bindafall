@@ -21,7 +21,7 @@ const useCounts = () => {
 };
 
 export const Home = (): JSX.Element => {
-  const { count, nontoken } = useCounts();
+  const { count, nontoken, token } = useCounts();
 
   return (
     <div>
@@ -62,7 +62,19 @@ export const Home = (): JSX.Element => {
             {[...Array(nontoken ? nontoken : 0).keys()]
               .map((_, index) => index + 1)
               .map(id => {
-                return <Card id={id.toString()} />;
+                return <Card id={id.toString()} token={false} />;
+              })}
+          </div>
+          <h2 className="text-red-500">
+            TOKENS
+            {token ? ` • ${token.toString()} cards` : ""}
+          </h2>
+          <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
+          <div className="grid gap-x-2 gap-y-2 grid-cols-4">
+            {[...Array(token ? token : 0).keys()]
+              .map((_, index) => index + 1)
+              .map(id => {
+                return <Card id={id.toString()} token={true} />;
               })}
           </div>
         </div>

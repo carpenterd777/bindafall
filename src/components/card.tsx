@@ -4,11 +4,15 @@ import Database from "../utils/database";
 
 const db = new Database();
 
-const Card: React.FC<{ id: string }> = ({ id }) => {
+const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
   const [filename, setFilename] = useState<string>();
   useEffect(() => {
     void (async () => {
-      setFilename(await db.image_filepath_of(id));
+      if (token) {
+        setFilename(await db.token_image_filepath_of(id));
+      } else {
+        setFilename(await db.image_filepath_of(id));
+      }
     })();
   });
   return (

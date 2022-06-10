@@ -122,6 +122,16 @@ class Database {
     return results.length === 1;
   }
 
+  /**
+   * The name of the route that should be built to display information about this card.
+   * @param id the id of the card
+   * @returns a route name
+   */
+  async route_name(id: string): Promise<string> {
+    // TODO
+    return id;
+  }
+
   // Private methods
   _map_from_field_to_field(
     src_field: number,

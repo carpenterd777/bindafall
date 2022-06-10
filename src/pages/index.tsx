@@ -26,7 +26,7 @@ export const Home = (): JSX.Element => {
   return (
     <div>
       <Head>
-        <title>Bindafall - Rise to Ragnarök</title>
+        <title>Rise to Ragnarök - Bindafall</title>
         <meta name="description" content="Preview of custom cards" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

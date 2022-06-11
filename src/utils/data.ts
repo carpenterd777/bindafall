@@ -141,7 +141,7 @@ Sacrifice Political Map of Gardarík: Draw a card.",A necessary tool for navigat
 65,"Rauthrn, Biting Glaive",Rauthrn Biting Glaive.png,,Rauthrn Dissolver of Steel.png,{3},Legendary Artifact — Equipment,"Equipped creature gets +2/+1 and has “When this creature attacks, destroy target Equipment attached to an opponent’s creature.”
 Equip {1}",The blade of a dragonsmith has few that can rival it…,,,"Rauthrn, Dissolver of Steel",Legendary Artifact Creature — Dragon,{3},C,"Flying
 When Rauthrn, Dissolver of Steel enters the battlefield, destroy all Equipment.",...because the breath of the dragon has left none.,3,3,Donald Gremillion,Allagar,https://www.donaldgremillion.com/,https://www.deviantart.com/allagar,
-66,Yngvi's Carraige,Yngvis Carraige.png,,,{2},Artifact — Vehicle,"{T}, Tap a creature you control: Add three mana of any color. Spend this mana only to pay Journey costs.
+66,Yngvi's Carraige,Yngvis Carriage.png,,,{2},Artifact — Vehicle,"{T}, Tap a creature you control: Add three mana of any color. Spend this mana only to pay Journey costs.
 Crew 1",,3,3,,,,,,,,,JMXD,,https://www.deviantart.com/jmxd,,
 67,The Ashen Rose,The Ashen Rose.png,,,,Land,"{T}: Add {C}.
 {T}, {1}, Sacrifice target artifact you control: Add mana of any color equal to the mana value of that artifact. ","A small smithy in the heart of Ravndalr is an unexpected place for a dark elf perfecting his craft, but it has welcomed him all the same.",,,,,,,,,,,ReneAigner,,https://reneaigner.artstation.com/,,

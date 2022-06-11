@@ -10,7 +10,7 @@ const useCardData = (
   useEffect(() => {
     void (async () => {
       setCardData(await db.card_data(id, token));
-    });
+    })();
   }, [cardData]);
   return cardData;
 };

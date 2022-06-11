@@ -1,16 +1,19 @@
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
+import useCardData from "../../../hooks/useCardData";
 import Database from "../../../utils/database";
 
-const CardPage = (): JSX.Element => {
-  const router = useRouter();
-  const { name } = router.query;
+const CardPage = ({ id }: { name: string; id: string }): JSX.Element => {
+  const cardData = useCardData(id);
+
+  if (cardData === undefined) {
+    return <></>;
+  }
 
   return (
     <>
       <Head>
-        <title>{name} - Rise to Ragnarök - Bindafall</title>
+        <title>{cardData["name"]} - Rise to Ragnarök - Bindafall</title>
         <meta name="description" content="Preview of custom cards" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -42,8 +45,9 @@ export const getStaticProps: GetStaticProps = ({
 }: GetStaticPropsContext) => {
   if (params === undefined) throw new Error("Could not get params!");
   const name = params.name;
+  const id = params.id;
   return {
-    props: { name },
+    props: { name, id },
   };
 };
 

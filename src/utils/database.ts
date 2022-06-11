@@ -108,33 +108,27 @@ class Database {
    * @returns the path leading to the backside image
    */
   async backside_image_filepath_of(id: string): Promise<string> {
-    return this._map_from_field_to_field(
-      CardField.ID,
-      CardField.BACKSIDE_FILE,
-      "backside_image_filepath_of",
-      "backside image filepath",
-      false
-    )(id);
+    const cardData = await this.card_data(id);
+    if (cardData["backside_file"] === undefined)
+      throw new MissingDataError(
+        "backside_image_filepath_of",
+        "backside image file"
+      );
+    return cardData["backside_file"];
   }
 
   async image_filepath_of(id: string): Promise<string> {
-    return this._map_from_field_to_field(
-      CardField.ID,
-      CardField.IMAGE_FILE,
-      "image_filepath_of",
-      "image filepath",
-      false
-    )(id);
+    const cardData = await this.card_data(id);
+    if (cardData["image_file"] === undefined)
+      throw new MissingDataError("image_filepath_of", "image file");
+    return cardData["image_file"];
   }
 
   async token_image_filepath_of(id: string): Promise<string> {
-    return this._map_from_field_to_field(
-      CardField.ID,
-      CardField.IMAGE_FILE,
-      "token_image_filepath_of",
-      "image filepath",
-      true
-    )(id);
+    const cardData = await this.card_data(id, true);
+    if (cardData["image_file"] === undefined)
+      throw new MissingDataError("token_image_filepath_of", "image file");
+    return cardData["image_file"];
   }
 
   async is_two_sided(id: string): Promise<boolean> {

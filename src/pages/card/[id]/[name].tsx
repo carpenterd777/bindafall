@@ -1,10 +1,32 @@
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import { FC, ReactNode } from "react";
+import DefaultLayout from "../../../components/default_layout";
 import useCardData from "../../../hooks/useCardData";
+import useIsTwoSided from "../../../hooks/useIsTwoSided";
 import Database from "../../../utils/database";
 
-const CardPage = ({ id }: { name: string; id: string }): JSX.Element => {
+const DataBox: FC<{ children: ReactNode; top?: boolean; bottom?: boolean }> = ({
+  children,
+  top = false,
+  bottom = false,
+}) => {
+  return (
+    <div
+      className={`px-3 py-2 w-[25vw] text-left border-x ${
+        top ? "border-t" : ""
+      } ${bottom ? "border-b" : ""}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+const CardPage: FC<{ name: string; id: string }> = ({ id }) => {
   const cardData = useCardData(id);
+  const isTwoSided = useIsTwoSided(id);
 
   if (cardData === undefined) {
     return <></>;
@@ -13,10 +35,134 @@ const CardPage = ({ id }: { name: string; id: string }): JSX.Element => {
   return (
     <>
       <Head>
-        <title>{cardData["name"]} - Rise to Ragnarök - Bindafall</title>
+        <title>
+          {`${cardData["name"] ? cardData["name"] + " - " : ""}`}Rise to
+          Ragnarök - Bindafall
+        </title>
         <meta name="description" content="Preview of custom cards" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <DefaultLayout>
+        <div className="flex flex-row">
+          <div className="flex flex-col">
+            <Image
+              src={`/card_imgs/${
+                cardData["image_file"] ? cardData["image_file"] : ""
+              }`}
+              width={375}
+              height={523}
+            />
+            {cardData["backside_file"] && cardData["backside_file"] !== "" ? (
+              <div className="mt-3">
+                <Image
+                  src={`/card_imgs/${cardData["backside_file"]}`}
+                  width={375}
+                  height={523}
+                ></Image>
+              </div>
+            ) : null}
+          </div>
+          <div className="flex flex-col">
+            <DataBox top>
+              {cardData["name"] && cardData["mana_cost"]
+                ? `${cardData["name"]} ${cardData["mana_cost"]}`
+                : ""}
+            </DataBox>
+            <DataBox top>
+              {cardData["type_line"] ? cardData["type_line"] : ""}
+            </DataBox>
+            <DataBox top>
+              {cardData["mechanics_text"] ? cardData["mechanics_text"] : ""}
+            </DataBox>
+            {cardData["power"] &&
+            cardData["toughness"] &&
+            cardData["power"] !== "" &&
+            cardData["toughness"] !== "" ? (
+              <DataBox top>
+                {`${cardData["power"]}/${cardData["toughness"]}`}
+              </DataBox>
+            ) : null}
+            {isTwoSided ? (
+              <>
+                <DataBox top>
+                  {cardData["backside_name"]
+                    ? `${cardData["backside_name"]} ${
+                        cardData["backside_mana_cost"] &&
+                        cardData["backside_mana_cost"] !== ""
+                          ? cardData["backside_mana_cost"]
+                          : ""
+                      }`
+                    : ""}
+                </DataBox>
+                <DataBox top>
+                  {cardData["backside_typeline"]
+                    ? `${
+                        cardData["backside_color"] &&
+                        cardData["backside_color]"] !== ""
+                          ? cardData["backside_color"] +
+                            " " +
+                            cardData["backside_typeline"]
+                          : cardData["backside_typeline"]
+                      }`
+                    : ""}
+                </DataBox>
+                <DataBox top>
+                  {cardData["backside_mechanics_text"]
+                    ? cardData["backside_mechanics_text"]
+                    : ""}
+                </DataBox>
+                {cardData["backside_power"] &&
+                cardData["backside_toughness"] &&
+                cardData["backside_power"] !== "" &&
+                cardData["backside_toughness"] !== "" ? (
+                  <DataBox top>
+                    {`${cardData["backside_power"]}/${cardData["backside_toughness"]}`}
+                  </DataBox>
+                ) : null}
+              </>
+            ) : null}
+            {cardData["illustrator"] && cardData["illustrator_portfolio"] ? (
+              <DataBox
+                top
+                bottom={
+                  (cardData["backside_illustrator"] === undefined ||
+                    cardData["backside_illustrator"] === "") &&
+                  (cardData["errata_acknowledgements"] === undefined ||
+                    cardData["errata_acknowledgements"] === "")
+                }
+              >
+                Illustrated by{" "}
+                <Link href={cardData["illustrator_portfolio"]}>
+                  {cardData["illustrator"]}
+                </Link>
+              </DataBox>
+            ) : null}
+            {cardData["backside_illustrator"] &&
+            cardData["backside_illustrator_portfolio"] &&
+            cardData["backside_illustrator"] !== "" ? (
+              <DataBox
+                top
+                bottom={
+                  cardData["errata_acknowledgements"] === undefined ||
+                  cardData["errata_acknowledgements"] === ""
+                }
+              >
+                Backside art illustrated by{" "}
+                <Link href={cardData["backside_illustrator_portfolio"]}>
+                  {cardData["backside_illustrator"]}
+                </Link>
+              </DataBox>
+            ) : null}
+            {cardData["errata_acknowledgements"] &&
+            cardData["errata_acknowledgements"] !== "" ? (
+              <DataBox top bottom>
+                Errata and Acknowledgements:
+                {"  " + cardData["errata_acknowledgements"]}
+              </DataBox>
+            ) : null}
+          </div>
+        </div>
+      </DefaultLayout>
     </>
   );
 };

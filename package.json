@@ -1,8 +1,9 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "yarn build-data && NODE_OPTIONS='--inspect' next dev",
+    "build": "yarn build-data && next build",
+    "build-data": "./scripts/generate-data-file.sh",
     "build-types": "tsc --noEmit --pretty",
     "start": "next start",
     "lint": "next lint",

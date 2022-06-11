@@ -46,7 +46,7 @@ export const Home = (): JSX.Element => {
             <div>
               <div className="font-bold text-lg">Rise to Ragnarök (RTR)</div>
               <div className="text-sm">
-                {count ? `${count.toString()} cards •` : ""} Released 2022-05-28
+                {count ? `${count.toString()} cards •` : ""} Released 2022-06-11
               </div>
             </div>
           </div>

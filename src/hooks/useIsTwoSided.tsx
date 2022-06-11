@@ -8,7 +8,7 @@ const useIsTwoSided = (id: string): boolean => {
     void (async () => {
       setIsTwoSided(await db.is_two_sided(id));
     })();
-  });
+  }, [isTwoSided]);
   return isTwoSided;
 };
 

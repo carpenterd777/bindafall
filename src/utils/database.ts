@@ -14,11 +14,41 @@ enum CardField {
 }
 
 /**
+ * Thrown if the database could not be found, built, or reached.
+ */
+class DatabaseNotFoundError extends Error {
+  constructor(method_name: string) {
+    super();
+    this.message = `${method_name}: database could not be found`;
+  }
+}
+
+/**
+ * Thrown if data from the database that was expected to be found was not there.
+ */
+class MissingDataError extends Error {
+  constructor(method_name: string, missing_data: string) {
+    super();
+    this.message = `${method_name}: ${missing_data} could not be found in database`;
+  }
+}
+
+/**
+ * Thrown if a method that takes an ID as a parameter is unable to find a card with the passed ID.
+ */
+class IdOutOfRangeError extends Error {
+  constructor(method_name: string, id: string) {
+    super();
+    this.message = `${method_name}: could not find card with id ${id}`;
+  }
+}
+
+/**
  * Handles all database operations.
  */
 class Database {
   constructor() {
-    parsed.set(this, parse(data.toString()) as string[][]);
+    parsed.set(this, parse(data) as string[][]);
   }
 
   /**
@@ -123,13 +153,74 @@ class Database {
   }
 
   /**
+   * Returns an object containing all of the data for a card.
+   * @param id the id of the card
+   * @param token whether this is a token id
+   * @returns an object containing all of the data for that card
+   */
+  async card_data(id: string, token = false): Promise<Record<string, string>> {
+    const method_name = "card_data";
+    const table = parsed.get(this);
+    if (table === undefined) throw new DatabaseNotFoundError(method_name);
+
+    const field_names = table[0];
+    if (field_names === undefined)
+      throw new MissingDataError(method_name, "field names");
+
+    const card = table.filter(data => {
+      if (token) {
+        return data[CardField.ID] === id && data[CardField.IS_TOKEN] === "Y";
+      }
+      return data[CardField.ID] === id;
+    })[0];
+    if (card === undefined) throw new IdOutOfRangeError(method_name, id);
+
+    const card_obj: Record<string, string> = {};
+    for (let i = 0; i < field_names.length; i++) {
+      const field_name = field_names[i];
+      const field_data = card[i];
+      if (field_name === undefined || field_data === undefined) {
+        throw new Error(
+          "card_data: exceeded length of array when generating card object"
+        );
+      }
+      card_obj[field_name] = field_data;
+    }
+
+    return card_obj;
+  }
+
+  /**
    * The name of the route that should be built to display information about this card.
    * @param id the id of the card
+   * @param token whether or not this is a card or token id
    * @returns a route name
    */
-  async route_name(id: string): Promise<string> {
-    // TODO
-    return id;
+  async route_name(id: string, token = false): Promise<string> {
+    const method_name = "route_name";
+    const table = parsed.get(this);
+    if (table === undefined) throw new DatabaseNotFoundError(method_name);
+
+    // build route name from front name and back name (if applicable)
+
+    let route_name = "";
+
+    const card = await this.card_data(id, token);
+
+    const first_part = card["name"];
+    if (first_part === undefined)
+      throw new MissingDataError(method_name, "name");
+    route_name += this._clean_string(first_part);
+
+    const is_two_sided = await this.is_two_sided(id);
+    if (is_two_sided) {
+      const second_part = card["backside_name"];
+      if (second_part === undefined)
+        throw new MissingDataError(method_name, "backside name");
+      route_name += this._clean_string(second_part);
+    }
+
+    return route_name;
   }
 
   // Private methods
@@ -171,6 +262,14 @@ class Database {
 
       return _dest;
     };
+  }
+
+  _clean_string(s: string): string {
+    return s
+      .toLowerCase()
+      .replace(/ /g, "_")
+      .replace(/,/g, "")
+      .replace(/'/g, "");
   }
 }
 

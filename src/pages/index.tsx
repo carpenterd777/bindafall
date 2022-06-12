@@ -6,15 +6,14 @@ import Card from "../components/card";
 import Database from "../utils/database";
 
 const useCounts = () => {
-  const db = new Database();
   const [count, setCount] = useState<number>();
   const [nontoken, setNontoken] = useState<number>();
   const [token, setToken] = useState<number>();
   useEffect(() => {
     void (async () => {
-      setCount(await db.card_count());
-      setNontoken(await db.nontoken_count());
-      setToken(await db.token_count());
+      setCount(await Database.card_count());
+      setNontoken(await Database.nontoken_count());
+      setToken(await Database.token_count());
     })();
   }, [count, nontoken, token]);
   return { count, nontoken, token };

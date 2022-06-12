@@ -19,15 +19,13 @@ const CardPage = (): JSX.Element => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const db = new Database();
-
-  const numTokens = await db.token_count();
+  const numTokens = await Database.token_count();
   const paths: Array<{ params: { id: string; name: string } }> = [];
 
   // for each token, get its route name and add it to the list
   for (const i of [...Array(numTokens).keys()]) {
     const id = `${i + 1}`;
-    const name = await db.route_name(id, true);
+    const name = await Database.route_name(id, true);
     paths.push({ params: { id: id, name: name } });
   }
 

@@ -2,8 +2,7 @@
 import { parse } from "@vanillaes/csv";
 import { data } from "./data";
 
-// maps for private variable storage
-const parsed = new WeakMap<ThisType<Database>, Array<Array<string>>>();
+const table = parse(data) as Array<Array<string>>;
 
 enum CardField {
   ID,
@@ -11,16 +10,6 @@ enum CardField {
   IMAGE_FILE,
   IS_TOKEN,
   BACKSIDE_FILE,
-}
-
-/**
- * Thrown if the database could not be found, built, or reached.
- */
-class DatabaseNotFoundError extends Error {
-  constructor(method_name: string) {
-    super();
-    this.message = `${method_name}: database could not be found`;
-  }
 }
 
 /**
@@ -47,38 +36,24 @@ class IdOutOfRangeError extends Error {
  * Handles all database operations.
  */
 class Database {
-  constructor() {
-    parsed.set(this, parse(data) as string[][]);
-  }
-
   /**
    * How many cards are currently in the database.
    * @returns The number of cards in the database including tokens
    */
-  async card_count(): Promise<number> {
-    // parsed is a 2D array. since each element will be card data, we can simply use the length of
+  static async card_count(): Promise<number> {
+    // table is a 2D array. since each element will be card data, we can simply use the length of
     // this array to know how many cards there are. the header is not a card, subtract 1.
-    const table = parsed.get(this);
-    if (table) {
-      return table.length - 1;
-    }
-    throw new Error("card_count: no database found");
+    return table.length - 1;
   }
 
   /**
    * How many tokens are currently in the database
    * @returns the number of tokens currently in the database
    */
-  async token_count(): Promise<number> {
-    // check if table can be read
-    const table = parsed.get(this);
-    if (table === undefined) {
-      throw new Error("token_count: no database found");
-    }
-
+  static async token_count(): Promise<number> {
     // find the length of the array of tokens
     return table.filter(card_data => {
-      const is_token = card_data[3];
+      const is_token = card_data[CardField.IS_TOKEN];
       if (is_token === undefined)
         throw new Error("token_count: card missing id");
       // tokens have an id starting with T
@@ -90,14 +65,9 @@ class Database {
    * Counts the number of nontoken cards are in the database.
    * @returns the number of nontoken cards
    */
-  async nontoken_count(): Promise<number> {
-    // check if table exists
-    const table = parsed.get(this);
-    if (table === undefined)
-      throw new Error("nontoken_count: database could not be found");
-
-    const card_count = await this.card_count();
-    const token_count = await this.token_count();
+  static async nontoken_count(): Promise<number> {
+    const card_count = await Database.card_count();
+    const token_count = await Database.token_count();
 
     return card_count - token_count;
   }
@@ -107,8 +77,8 @@ class Database {
    * @param id the id of the card of which to get the backside image of
    * @returns the path leading to the backside image
    */
-  async backside_image_filepath_of(id: string): Promise<string> {
-    const cardData = await this.card_data(id);
+  static async backside_image_filepath_of(id: string): Promise<string> {
+    const cardData = await Database.card_data(id);
     if (cardData["backside_file"] === undefined)
       throw new MissingDataError(
         "backside_image_filepath_of",
@@ -117,25 +87,21 @@ class Database {
     return cardData["backside_file"];
   }
 
-  async image_filepath_of(id: string): Promise<string> {
+  static async image_filepath_of(id: string): Promise<string> {
     const cardData = await this.card_data(id);
     if (cardData["image_file"] === undefined)
       throw new MissingDataError("image_filepath_of", "image file");
     return cardData["image_file"];
   }
 
-  async token_image_filepath_of(id: string): Promise<string> {
+  static async token_image_filepath_of(id: string): Promise<string> {
     const cardData = await this.card_data(id, true);
     if (cardData["image_file"] === undefined)
       throw new MissingDataError("token_image_filepath_of", "image file");
     return cardData["image_file"];
   }
 
-  async is_two_sided(id: string): Promise<boolean> {
-    const table = parsed.get(this);
-    if (table === undefined)
-      throw new Error("is_two_sided: database could not be found");
-
+  static async is_two_sided(id: string): Promise<boolean> {
     const results = table.filter(card_data => {
       return (
         card_data[CardField.BACKSIDE_FILE] !== "" &&
@@ -152,10 +118,11 @@ class Database {
    * @param token whether this is a token id
    * @returns an object containing all of the data for that card
    */
-  async card_data(id: string, token = false): Promise<Record<string, string>> {
+  static async card_data(
+    id: string,
+    token = false
+  ): Promise<Record<string, string>> {
     const method_name = "card_data";
-    const table = parsed.get(this);
-    if (table === undefined) throw new DatabaseNotFoundError(method_name);
 
     const field_names = table[0];
     if (field_names === undefined)
@@ -190,10 +157,8 @@ class Database {
    * @param token whether or not this is a card or token id
    * @returns a route name
    */
-  async route_name(id: string, token = false): Promise<string> {
+  static async route_name(id: string, token = false): Promise<string> {
     const method_name = "route_name";
-    const table = parsed.get(this);
-    if (table === undefined) throw new DatabaseNotFoundError(method_name);
 
     // build route name from front name and back name (if applicable)
 
@@ -211,14 +176,14 @@ class Database {
       const second_part = card["backside_name"];
       if (second_part === undefined)
         throw new MissingDataError(method_name, "backside name");
-      route_name += this._clean_string(second_part);
+      route_name += Database._clean_string(second_part);
     }
 
     return route_name;
   }
 
   // Private methods
-  _map_from_field_to_field(
+  static _map_from_field_to_field(
     src_field: number,
     dest_field: number,
     name: string,
@@ -226,11 +191,6 @@ class Database {
     tokens: boolean
   ): (src: string) => Promise<string> {
     return async (src: string): Promise<string> => {
-      // check if table exists
-      const table = parsed.get(this);
-      if (table === undefined)
-        throw new Error(`${name}: database could not be found`);
-
       // filter out all cards that do not have a field like src, result will be first index in array
       const results = table.filter(card_data => {
         const _src = card_data[src_field];
@@ -258,7 +218,7 @@ class Database {
     };
   }
 
-  _clean_string(s: string): string {
+  static _clean_string(s: string): string {
     return s
       .toLowerCase()
       .replace(/ /g, "_")

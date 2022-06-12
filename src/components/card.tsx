@@ -6,7 +6,6 @@ import useIsTwoSided from "../hooks/useIsTwoSided";
 import useRouteName from "../hooks/useRouteName";
 import Database from "../utils/database";
 
-const db = new Database();
 const FEATURE_FLIP = process.env.FEATURE_FLIP === "true"; // feature toggle
 
 const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
@@ -19,12 +18,12 @@ const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
   useEffect(() => {
     void (async () => {
       if (token) {
-        setFilename(await db.token_image_filepath_of(id));
+        setFilename(await Database.token_image_filepath_of(id));
       } else {
         if (isFlipped && isTwoSided) {
-          setFilename(await db.backside_image_filepath_of(id));
+          setFilename(await Database.backside_image_filepath_of(id));
         } else {
-          setFilename(await db.image_filepath_of(id));
+          setFilename(await Database.image_filepath_of(id));
         }
       }
     })();
@@ -68,6 +67,7 @@ const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
             height={523}
             quality={10}
             layout="responsive"
+            priority
           />
         </a>
       </Link>

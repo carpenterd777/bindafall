@@ -8,6 +8,12 @@ import useCardData from "../../../hooks/useCardData";
 import useIsTwoSided from "../../../hooks/useIsTwoSided";
 import Database from "../../../utils/database";
 
+// Constants
+
+const IMAGE_HEIGHT = 523;
+const IMAGE_WIDTH = 375;
+const IMAGE_QUALITY = 25;
+
 const DataBox: FC<{ children: ReactNode; top?: boolean; bottom?: boolean }> = ({
   children,
   top = false,
@@ -49,15 +55,17 @@ const CardPage: FC<{ name: string; id: string }> = ({ id }) => {
               src={`/card_imgs/${
                 cardData["image_file"] ? cardData["image_file"] : ""
               }`}
-              width={375}
-              height={523}
+              width={IMAGE_WIDTH}
+              height={IMAGE_HEIGHT}
+              quality={IMAGE_QUALITY}
             />
             {cardData["backside_file"] && cardData["backside_file"] !== "" ? (
               <div className="mt-3">
                 <Image
                   src={`/card_imgs/${cardData["backside_file"]}`}
-                  width={375}
-                  height={523}
+                  width={IMAGE_WIDTH}
+                  height={IMAGE_HEIGHT}
+                  quality={IMAGE_QUALITY}
                 ></Image>
               </div>
             ) : null}
@@ -168,15 +176,13 @@ const CardPage: FC<{ name: string; id: string }> = ({ id }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const db = new Database();
-
-  const numCards = await db.nontoken_count();
+  const numCards = await Database.nontoken_count();
   const paths: Array<{ params: { id: string; name: string } }> = [];
 
   // for each card, get it's name and add that to an array
   for (const i of [...Array(numCards - 1).keys()]) {
     const id = `${i + 1}`;
-    const name = await db.route_name(id);
+    const name = await Database.route_name(id);
     paths.push({ params: { id: id, name: name } });
   }
 

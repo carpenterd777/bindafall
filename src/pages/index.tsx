@@ -61,7 +61,9 @@ export const Home = (): JSX.Element => {
             {[...Array(nontoken ? nontoken : 0).keys()]
               .map((_, index) => index + 1)
               .map(id => {
-                return <Card id={id.toString()} token={false} />;
+                return (
+                  <Card id={id.toString()} token={false} key={`card-${id}`} />
+                );
               })}
           </div>
           <h2 className="text-red-500">
@@ -73,7 +75,9 @@ export const Home = (): JSX.Element => {
             {[...Array(token ? token : 0).keys()]
               .map((_, index) => index + 1)
               .map(id => {
-                return <Card id={id.toString()} token={true} />;
+                return (
+                  <Card id={id.toString()} token={true} key={`token-${id}`} />
+                );
               })}
           </div>
         </div>

@@ -58,6 +58,7 @@ const CardPage: FC<{ name: string; id: string }> = ({ id }) => {
               width={IMAGE_WIDTH}
               height={IMAGE_HEIGHT}
               quality={IMAGE_QUALITY}
+              priority
             />
             {cardData["backside_file"] && cardData["backside_file"] !== "" ? (
               <div className="mt-3">

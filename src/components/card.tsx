@@ -6,7 +6,7 @@ import useIsTwoSided from "../hooks/useIsTwoSided";
 import useRouteName from "../hooks/useRouteName";
 import Database from "../utils/database";
 
-const FEATURE_FLIP = process.env.FEATURE_FLIP === "true"; // feature toggle
+const FEATURE_FLIP = process.env.NEXT_PUBLIC_FEATURE_FLIP === "true"; // feature toggle
 
 const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
   const [filename, setFilename] = useState<string>();

@@ -7,7 +7,7 @@ import useRouteName from "../hooks/useRouteName";
 import Database from "../utils/database";
 
 const db = new Database();
-const FEATURE_FLIP = false; // feature toggle
+const FEATURE_FLIP = process.env.FEATURE_FLIP === "true"; // feature toggle
 
 const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
   const [filename, setFilename] = useState<string>();
@@ -66,6 +66,7 @@ const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
             src={`/card_imgs/${filename ? filename : ""}`}
             width={375}
             height={523}
+            quality={10}
             layout="responsive"
           />
         </a>

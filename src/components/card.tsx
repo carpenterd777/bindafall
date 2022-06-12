@@ -52,25 +52,27 @@ const Card: React.FC<{ id: string; token: boolean }> = ({ id, token }) => {
       ) : (
         ""
       )}
-      <Link
-        href={
-          cardData && cardData["id"] && routeName
-            ? `/${token ? "token" : "card"}/${cardData["id"]}/${routeName}`
-            : ""
-        }
-        passHref
-      >
-        <a>
-          <Image
-            src={`/card_imgs/${filename ? filename : ""}`}
-            width={375}
-            height={523}
-            quality={10}
-            layout="responsive"
-            priority
-          />
-        </a>
-      </Link>
+      {filename !== undefined ? (
+        <Link
+          href={
+            cardData && cardData["id"] && routeName
+              ? `/${token ? "token" : "card"}/${cardData["id"]}/${routeName}`
+              : ""
+          }
+          passHref
+        >
+          <a>
+            <Image
+              src={`/card_imgs/${filename}`}
+              width={375}
+              height={523}
+              quality={10}
+              layout="responsive"
+              priority
+            />
+          </a>
+        </Link>
+      ) : null}
     </div>
   );
 };

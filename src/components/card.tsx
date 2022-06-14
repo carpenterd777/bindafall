@@ -17,7 +17,7 @@ const Card: React.FC<{
   const isTwoSided =
     backsideFilename !== undefined || backsideFilename !== null;
   return (
-    <div className="w-64 relative">
+    <div className="">
       {FEATURE_FLIP && isTwoSided ? (
         <button
           className={
@@ -38,14 +38,13 @@ const Card: React.FC<{
         ""
       )}
       {filename !== undefined ? (
-        <Link href={routeName === undefined ? "404" : routeName} passHref>
+        <Link href={routeName || "404"} passHref>
           <a>
             <Image
               src={`/card_imgs/${filename}`}
               width={375}
               height={523}
               quality={10}
-              layout="responsive"
               priority
             />
           </a>

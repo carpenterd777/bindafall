@@ -21,14 +21,9 @@ export const Home: FC<
       <main>
         {/* Set Header */}
         <div className="w-full bg-red-500 py-1">
-          <div className="px-[10em] flex flex-row">
+          <div className="lg:px-[10em] flex flex-row justify-center lg:justify-start">
             <div className="w-8 my-auto mx-2">
-              <Image
-                src={RtRSetSymbol}
-                width={1620}
-                height={1408}
-                layout="responsive"
-              />
+              <Image src={RtRSetSymbol} width={1620} height={1408} />
             </div>
             <div>
               <div className="font-bold text-lg">Rise to Ragnarök (RTR)</div>
@@ -39,13 +34,13 @@ export const Home: FC<
           </div>
         </div>
 
-        <div className="mx-36 my-6 text-center">
+        <div className="sm:mx-4 lg:mx-36 my-6 text-center">
           <h2 className="text-red-500">
             IN BOOSTERS
             {` • ${nontoken.toString()} cards`}
           </h2>
           <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
-          <div className="grid gap-x-2 gap-y-2 grid-cols-4">
+          <div className="lg:grid lg:gap-x-2 lg:gap-y-2 lg:grid-cols-4">
             {[...Array(nontoken).keys()]
               .map(index => index + 1)
               .map(id => {
@@ -64,7 +59,7 @@ export const Home: FC<
             {` • ${token.toString()} cards`}
           </h2>
           <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
-          <div className="grid gap-x-2 gap-y-2 grid-cols-4">
+          <div className="lg:grid gap-x-2 gap-y-2 grid-cols-4">
             {[...Array(token).keys()]
               .map(index => index + 1)
               .map(id => {

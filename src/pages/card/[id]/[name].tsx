@@ -25,7 +25,7 @@ const DataBox: FC<{ children: ReactNode; top?: boolean; bottom?: boolean }> = ({
 }) => {
   return (
     <div
-      className={`px-3 py-2 w-[25vw] text-left border-x ${
+      className={`px-3 py-2 lg:w-[25vw] text-left border-x ${
         top ? "border-t" : ""
       } ${bottom ? "border-b" : ""}`}
     >
@@ -46,7 +46,7 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DefaultLayout>
-        <div className="flex flex-row">
+        <div className="lg:flex flex-row">
           <div className="flex flex-col">
             <Image
               src={`/card_imgs/${cardData.image_file}`}

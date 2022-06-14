@@ -4,6 +4,7 @@ import Image from "next/image";
 import { FC } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
 import Card from "../components/card";
+import DefaultLayout from "../components/default_layout";
 import CardType from "../types/card";
 import Database from "../utils/database";
 
@@ -34,7 +35,7 @@ export const Home: FC<
           </div>
         </div>
 
-        <div className="sm:mx-4 lg:mx-36 my-6 text-center">
+        <DefaultLayout>
           <h2 className="text-red-500">
             IN BOOSTERS
             {` • ${nontoken.toString()} cards`}
@@ -74,7 +75,7 @@ export const Home: FC<
                 );
               })}
           </div>
-        </div>
+        </DefaultLayout>
       </main>
     </div>
   );

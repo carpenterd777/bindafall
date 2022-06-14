@@ -251,11 +251,6 @@
     "@typescript-eslint/types" "5.26.0"
     eslint-visitor-keys "^3.3.0"
 
-"@vanillaes/csv@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@vanillaes/csv/-/csv-3.0.1.tgz#3815a44363d563ca8165c067f06867809dad9b35"
-  integrity sha512-mNKB75OwOUQl90lXxDcgOzN8vb5fsGEa4TNF4rbP0e/MiXzJzEzMc369wOT9jyXidJlbZTHzP6H839d3i7Zdag==
-
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"

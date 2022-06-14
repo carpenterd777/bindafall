@@ -9,7 +9,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@vanillaes/csv": "^3.0.1",
     "mongodb": "^4.7.0",
     "next": "12.1.4",
     "react": "18.0.0",

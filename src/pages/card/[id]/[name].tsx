@@ -6,9 +6,9 @@ import {
 } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
 import { FC, ReactNode } from "react";
-import DefaultLayout from "../../../components/default_layout";
+import DefaultLayout from "../../../components/DefaultLayout";
+import TextLink from "../../../components/TextLink";
 import Card from "../../../types/card";
 import Database from "../../../utils/database";
 
@@ -16,7 +16,7 @@ import Database from "../../../utils/database";
 
 const IMAGE_HEIGHT = 523;
 const IMAGE_WIDTH = 375;
-const IMAGE_QUALITY = 25;
+const IMAGE_QUALITY = 45;
 
 const DataBox: FC<{ children: ReactNode; top?: boolean; bottom?: boolean }> = ({
   children,
@@ -114,18 +114,20 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 }
               >
                 Illustrated by{" "}
-                <Link href={cardData.illustrator_portfolio}>
-                  {cardData.illustrator}
-                </Link>
+                <TextLink
+                  href={cardData.illustrator_portfolio}
+                  text={cardData.illustrator}
+                />
               </DataBox>
             ) : null}
             {cardData.backside_illustrator !== "" &&
             cardData.backside_illustrator_portfolio !== "" ? (
               <DataBox top bottom={cardData.errata_acknowledgements === ""}>
                 Backside art illustrated by{" "}
-                <Link href={cardData.backside_illustrator_portfolio}>
-                  {cardData.backside_illustrator}
-                </Link>
+                <TextLink
+                  href={cardData.backside_illustrator_portfolio}
+                  text={cardData.backside_illustrator}
+                />
               </DataBox>
             ) : null}
             {cardData.errata_acknowledgements !== "" ? (

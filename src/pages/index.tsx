@@ -4,7 +4,7 @@ import Image from "next/image";
 import { FC } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
 import Card from "../components/card";
-import DefaultLayout from "../components/default_layout";
+import DefaultLayout from "../components/DefaultLayout";
 import CardType from "../types/card";
 import Database from "../utils/database";
 

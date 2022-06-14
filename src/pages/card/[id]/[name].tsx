@@ -18,16 +18,17 @@ const IMAGE_HEIGHT = 523;
 const IMAGE_WIDTH = 375;
 const IMAGE_QUALITY = 45;
 
-const DataBox: FC<{ children: ReactNode; top?: boolean; bottom?: boolean }> = ({
-  children,
-  top = false,
-  bottom = false,
-}) => {
+const DataBox: FC<{
+  children: ReactNode;
+  top?: boolean;
+  bottom?: boolean;
+  italic?: boolean;
+}> = ({ children, top = false, bottom = false, italic = false }) => {
   return (
     <div
       className={`px-3 py-2 lg:w-[25vw] text-left border-x ${
         top ? "border-t" : ""
-      } ${bottom ? "border-b" : ""}`}
+      } ${bottom ? "border-b" : ""} ${italic ? "italic" : ""}`}
     >
       {children}
     </div>
@@ -71,8 +72,15 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
           <div className="flex flex-col">
             <DataBox top>{`${cardData.name} ${cardData.mana_cost}`}</DataBox>
-            <DataBox top>{cardData.type_line}</DataBox>
-            <DataBox top>{cardData.mechanics_text}</DataBox>
+            <DataBox top bottom>
+              {cardData.type_line}
+            </DataBox>
+            {cardData.mechanics_text.split("\n").map(line => {
+              return <DataBox>{line}</DataBox>;
+            })}
+            {cardData.flavor_text !== "" ? (
+              <DataBox italic>{cardData.flavor_text}</DataBox>
+            ) : null}
             {cardData.power !== "" && cardData.toughness !== "" ? (
               <DataBox top>{`${cardData.power}/${cardData.toughness}`}</DataBox>
             ) : null}
@@ -86,7 +94,7 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
                       : ""
                   }`}
                 </DataBox>
-                <DataBox top>
+                <DataBox top bottom>
                   {`${
                     cardData.backside_color !== ""
                       ? cardData.backside_color +
@@ -95,7 +103,10 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
                       : cardData.backside_typeline
                   }`}
                 </DataBox>
-                <DataBox top>{cardData.backside_mechanics_text}</DataBox>
+                {cardData.backside_mechanics_text.split("\n").map(line => {
+                  return <DataBox>{line}</DataBox>;
+                })}
+                <DataBox italic>{cardData.backside_flavor_text}</DataBox>
                 {cardData.backside_power !== "" &&
                 cardData.backside_toughness !== "" ? (
                   <DataBox top>

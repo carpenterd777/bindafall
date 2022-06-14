@@ -56,7 +56,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const paths: Array<{ params: { id: string; name: string } }> = [];
 
   // for each card, get it's name and add that to an array
-  for (const i of [...Array(numCards - 1).keys()]) {
+  for (const i of [...Array(numCards).keys()]) {
     const id = i + 1;
     const name = await Database.route_name(id, true);
     paths.push({ params: { id: id.toString(), name: name } });

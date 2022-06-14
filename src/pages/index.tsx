@@ -3,8 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 import { FC } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
-import Card from "../components/card";
+import Card from "../components/Card";
 import DefaultLayout from "../components/DefaultLayout";
+import Header from "../components/Header";
 import CardType from "../types/card";
 import Database from "../utils/database";
 
@@ -21,13 +22,14 @@ export const Home: FC<
 
       <main>
         {/* Set Header */}
+        <Header />
         <div className="w-full bg-red-500 py-1">
           <div className="lg:px-[10em] flex flex-row justify-center lg:justify-start">
             <div className="w-8 my-auto mx-2">
               <Image src={RtRSetSymbol} width={1620} height={1408} />
             </div>
             <div>
-              <div className="font-bold text-lg">Rise to Ragnarök (RTR)</div>
+              <h2 className="font-bold text-lg">Rise to Ragnarök (RTR)</h2>
               <div className="text-sm">
                 {`${count.toString()} cards •`} Released 2022-06-11
               </div>
@@ -36,10 +38,10 @@ export const Home: FC<
         </div>
 
         <DefaultLayout>
-          <h2 className="text-red-500">
+          <h3 className="text-red-500">
             IN BOOSTERS
             {` • ${nontoken.toString()} cards`}
-          </h2>
+          </h3>
           <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
           <div className="lg:grid lg:gap-x-2 lg:gap-y-2 lg:grid-cols-4">
             {[...Array(nontoken).keys()]
@@ -55,10 +57,10 @@ export const Home: FC<
                 );
               })}
           </div>
-          <h2 className="text-red-500">
+          <h3 className="text-red-500">
             TOKENS
             {` • ${token.toString()} cards`}
-          </h2>
+          </h3>
           <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
           <div className="lg:grid gap-x-2 gap-y-2 grid-cols-4">
             {[...Array(token).keys()]

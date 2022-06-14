@@ -8,6 +8,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { FC, ReactNode } from "react";
 import DefaultLayout from "../../../components/DefaultLayout";
+import Header from "../../../components/Header";
 import TextLink from "../../../components/TextLink";
 import Card from "../../../types/card";
 import Database from "../../../utils/database";
@@ -49,6 +50,7 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <meta name="description" content="Preview of custom cards" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Header />
       <DefaultLayout>
         <div className="lg:flex flex-row justify-center">
           <div className="flex flex-col">

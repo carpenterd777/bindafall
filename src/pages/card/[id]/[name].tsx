@@ -38,15 +38,18 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
   cardData,
   isTwoSided,
 }) => {
+  const tabTitle = isTwoSided
+    ? `${cardData.name} // ${cardData.backside_name}`
+    : cardData.name;
   return (
     <>
       <Head>
-        <title>{`${cardData.name + " - "}`}Rise to Ragnarök - Bindafall</title>
+        <title>{`${tabTitle + " - "}`}Rise to Ragnarök - Bindafall</title>
         <meta name="description" content="Preview of custom cards" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DefaultLayout>
-        <div className="lg:flex flex-row">
+        <div className="lg:flex flex-row justify-center">
           <div className="flex flex-col">
             <Image
               src={`/card_imgs/${cardData.image_file}`}

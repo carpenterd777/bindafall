@@ -1,27 +1,15 @@
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { FC } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
 import Card from "../components/card";
+import CardType from "../types/card";
 import Database from "../utils/database";
 
-const useCounts = () => {
-  const [count, setCount] = useState<number>();
-  const [nontoken, setNontoken] = useState<number>();
-  const [token, setToken] = useState<number>();
-  useEffect(() => {
-    void (async () => {
-      setCount(await Database.card_count());
-      setNontoken(await Database.nontoken_count());
-      setToken(await Database.token_count());
-    })();
-  }, [count, nontoken, token]);
-  return { count, nontoken, token };
-};
-
-export const Home = (): JSX.Element => {
-  const { count, nontoken, token } = useCounts();
-
+export const Home: FC<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ count, nontoken, token, filenames, backsideFilenames, routeNames }) => {
   return (
     <div>
       <Head>
@@ -45,7 +33,7 @@ export const Home = (): JSX.Element => {
             <div>
               <div className="font-bold text-lg">Rise to Ragnarök (RTR)</div>
               <div className="text-sm">
-                {count ? `${count.toString()} cards •` : ""} Released 2022-06-11
+                {`${count.toString()} cards •`} Released 2022-06-11
               </div>
             </div>
           </div>
@@ -54,29 +42,40 @@ export const Home = (): JSX.Element => {
         <div className="mx-36 my-6 text-center">
           <h2 className="text-red-500">
             IN BOOSTERS
-            {nontoken ? ` • ${nontoken.toString()} cards` : ""}
+            {` • ${nontoken.toString()} cards`}
           </h2>
           <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
           <div className="grid gap-x-2 gap-y-2 grid-cols-4">
-            {[...Array(nontoken ? nontoken : 0).keys()]
-              .map((_, index) => index + 1)
+            {[...Array(nontoken).keys()]
+              .map(index => index + 1)
               .map(id => {
                 return (
-                  <Card id={id.toString()} token={false} key={`card-${id}`} />
+                  <Card
+                    filename={filenames[id - 1]}
+                    backsideFilename={backsideFilenames[id - 1]}
+                    routeName={`/card/${id}/${routeNames[id - 1] || ""}`}
+                    key={`card-${id}`}
+                  />
                 );
               })}
           </div>
           <h2 className="text-red-500">
             TOKENS
-            {token ? ` • ${token.toString()} cards` : ""}
+            {` • ${token.toString()} cards`}
           </h2>
           <div className="w-full bg-red-300 h-[1px] block mb-6"></div>
           <div className="grid gap-x-2 gap-y-2 grid-cols-4">
-            {[...Array(token ? token : 0).keys()]
-              .map((_, index) => index + 1)
+            {[...Array(token).keys()]
+              .map(index => index + 1)
               .map(id => {
+                const arrPosition = id + nontoken - 1;
                 return (
-                  <Card id={id.toString()} token={true} key={`token-${id}`} />
+                  <Card
+                    filename={filenames[arrPosition]}
+                    backsideFilename={backsideFilenames[arrPosition]}
+                    routeName={`/token/${id}/${routeNames[arrPosition] || ""}`}
+                    key={`token-${id}`}
+                  />
                 );
               })}
           </div>
@@ -84,6 +83,52 @@ export const Home = (): JSX.Element => {
       </main>
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  count: number;
+  token: number;
+  nontoken: number;
+  filenames: Array<string>;
+  backsideFilenames: Array<string | null>;
+  routeNames: Array<string>;
+}> = async () => {
+  const count = await Database.card_count();
+  const token = await Database.token_count();
+  const nontoken = count - token;
+
+  const cards: Array<CardType> = [];
+
+  // add nontokens
+  for (let i = 1; i < nontoken + 1; i++) {
+    cards.push(await Database.card_data(i, false));
+  }
+
+  // add tokens
+  for (let i = 1; i < token + 1; i++) {
+    cards.push(await Database.card_data(i, true));
+  }
+
+  const routeNames = await Promise.all(
+    cards.map(async card =>
+      card["is_token?"] === "Y"
+        ? await Database.route_name(card.id, true)
+        : await Database.route_name(card.id, false)
+    )
+  );
+
+  return {
+    props: {
+      count: count,
+      token: token,
+      nontoken: nontoken,
+      filenames: cards.map(card => card.image_file),
+      backsideFilenames: cards
+        .map(card => card.backside_file)
+        .map(filename => (filename === "" ? null : filename)),
+      routeNames: routeNames,
+    },
+  };
 };
 
 export default Home;

@@ -8,6 +8,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { FC, ReactNode } from "react";
 import DefaultLayout from "../../../components/DefaultLayout";
+import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
 import TextLink from "../../../components/TextLink";
 import Card from "../../../types/card";
@@ -152,6 +153,7 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
         </div>
       </DefaultLayout>
+      <Footer />
     </>
   );
 };

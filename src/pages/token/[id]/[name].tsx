@@ -12,6 +12,7 @@ import Card from "../../../types/card";
 import Database from "../../../utils/database";
 import TextLink from "../../../components/TextLink";
 import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
 
 // Constants
 
@@ -49,6 +50,7 @@ const TokenPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
         ) : null}
       </DefaultLayout>
+      <Footer />
     </>
   );
 };

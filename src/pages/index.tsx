@@ -5,6 +5,7 @@ import { FC } from "react";
 import RtRSetSymbol from "../../public/rtr-set-symbol.png";
 import Card from "../components/Card";
 import DefaultLayout from "../components/DefaultLayout";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import CardType from "../types/card";
 import Database from "../utils/database";
@@ -78,6 +79,7 @@ export const Home: FC<
               })}
           </div>
         </DefaultLayout>
+        <Footer />
       </main>
     </div>
   );

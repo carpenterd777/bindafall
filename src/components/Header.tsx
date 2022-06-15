@@ -34,6 +34,14 @@ const LinkDrawer: FC<{
           <Image src={"/xmark-solid.svg"} width={ICON_DIM} height={ICON_DIM} />
         </button>
       </div>
+      <div
+        className="border-b border-zinc-600 text-white px-10 py-2 underline"
+        onClick={() => {
+          setIsDrawerVisible(false);
+        }}
+      >
+        <Link href={"/"}>Home</Link>
+      </div>
       {links.map(({ href, text }) => {
         return (
           <div
@@ -44,6 +52,9 @@ const LinkDrawer: FC<{
           </div>
         );
       })}
+      <div className="px-3 mt-5">
+        <Search />
+      </div>
     </div>
   );
 };

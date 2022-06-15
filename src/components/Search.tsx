@@ -58,7 +58,7 @@ const Search: FC = () => {
   }, []);
 
   return (
-    <div className="hidden lg:block my-auto mx-5" ref={searchRef}>
+    <div className="lg:my-auto mx-5" ref={searchRef}>
       <input
         className="text-white bg-slate-700 px-2 py-1 rounded-md w-60"
         onChange={onChange}

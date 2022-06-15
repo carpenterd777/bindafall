@@ -24,7 +24,7 @@ const LinkDrawer: FC<{
   setIsDrawerVisible: Dispatch<SetStateAction<boolean>>;
 }> = ({ setIsDrawerVisible }) => {
   return (
-    <div className="absolute h-full w-full bg-zinc-900 flex flex-col z-20 content-center">
+    <div className="absolute h-[300vh] w-full bg-zinc-900 flex flex-col z-20 content-center">
       <div className="border-b border-zinc-600 text-white px-3 my-1 underline">
         <button
           onClick={() => {

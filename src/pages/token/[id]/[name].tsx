@@ -11,6 +11,7 @@ import DefaultLayout from "../../../components/DefaultLayout";
 import Card from "../../../types/card";
 import Database from "../../../utils/database";
 import TextLink from "../../../components/TextLink";
+import Header from "../../../components/Header";
 
 // Constants
 
@@ -28,6 +29,7 @@ const TokenPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <meta name="description" content="Preview of custom cards" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Header />
       <DefaultLayout>
         <Image
           src={`/card_imgs/${cardData.image_file}`}

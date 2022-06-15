@@ -140,6 +140,47 @@ class Database {
     return route_name;
   }
 
+  static async get_alike_cards_by_name(
+    name: string
+  ): Promise<Array<{ id: number; name: string; route_name: string }>> {
+    const aggCursor = (await clientPromise)
+      .db("bindafall")
+      .collection<Card>("cards")
+      .aggregate<Card>([
+        {
+          $search: {
+            index: "default",
+            text: {
+              path: ["name", "backside_name"],
+              query: name,
+              fuzzy: {},
+            },
+          },
+        },
+        {
+          $limit: 5,
+        },
+        {
+          $project: {
+            _id: 0,
+            id: 1,
+            name: 1,
+          },
+        },
+      ]);
+
+    const arr = await aggCursor.toArray();
+    return Promise.all(
+      arr.map(async item => {
+        return {
+          id: item.id,
+          name: item.name,
+          route_name: await Database.route_name(item.id, false),
+        };
+      })
+    );
+  }
+
   // Private methods
   static _clean_string(s: string): string {
     return s

@@ -7,6 +7,10 @@ const ICON_DIM = 35;
 
 const links = [
   {
+    href: "/about",
+    text: "About",
+  },
+  {
     href: "https://www.moxfield.com/decks/8QDMc-F-70am_vWrAbDXdA",
     text: "Draft Cube Cardlist",
   },

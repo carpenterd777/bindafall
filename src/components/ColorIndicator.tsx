@@ -1,6 +1,24 @@
 import { FC } from "react";
 
-export type MTGColor = "W" | "U" | "B" | "R" | "G" | "C";
+type MTGColor = "W" | "U" | "B" | "R" | "G" | "C";
+
+export const getMTGColorsFromString = (
+  s: string
+): [MTGColor] | [MTGColor, MTGColor] => {
+  const colors = s.split("");
+  for (const color of colors) {
+    if (!["W", "U", "B", "R", "G", "C"].includes(color)) {
+      throw new Error("got invalid color!");
+    }
+  }
+  if (colors[0] !== undefined && colors.length === 1)
+    return [colors[0] as MTGColor];
+
+  if (colors[0] !== undefined && colors[1] !== undefined && colors.length === 2)
+    return [colors[0] as MTGColor, colors[1] as MTGColor];
+
+  throw new Error(`invalid length ${s.length}`);
+};
 
 const ColorIndicator: FC<{
   color: [MTGColor] | [MTGColor, MTGColor] | null;

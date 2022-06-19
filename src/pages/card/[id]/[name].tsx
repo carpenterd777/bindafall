@@ -8,7 +8,9 @@ import Head from "next/head";
 import Image from "next/image";
 import { FC, ReactNode } from "react";
 import CardSymbol from "../../../components/CardSymbol";
-import ColorIndicator, { MTGColor } from "../../../components/ColorIndicator";
+import ColorIndicator, {
+  getMTGColorsFromString,
+} from "../../../components/ColorIndicator";
 import DefaultLayout from "../../../components/DefaultLayout";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
@@ -21,24 +23,6 @@ import Database from "../../../utils/database";
 const IMAGE_HEIGHT = 523;
 const IMAGE_WIDTH = 375;
 const IMAGE_QUALITY = 45;
-
-const getMTGColorsFromString = (
-  s: string
-): [MTGColor] | [MTGColor, MTGColor] => {
-  const colors = s.split("");
-  for (const color of colors) {
-    if (!["W", "U", "B", "R", "G"].includes(color)) {
-      throw new Error("got invalid color!");
-    }
-  }
-  if (colors[0] !== undefined && colors.length === 1)
-    return [colors[0] as MTGColor];
-
-  if (colors[0] !== undefined && colors[1] !== undefined && colors.length === 2)
-    return [colors[0] as MTGColor, colors[1] as MTGColor];
-
-  throw new Error(`invalid length ${s.length}`);
-};
 
 const DataBox: FC<{
   children: ReactNode;

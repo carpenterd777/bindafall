@@ -135,6 +135,7 @@ class Database {
     const card = await Database.card_data(id, token);
     route_name += this._clean_string(card.name);
     if (card.backside_name !== "") {
+      route_name += "_";
       route_name += Database._clean_string(card.backside_name);
     }
     return route_name;

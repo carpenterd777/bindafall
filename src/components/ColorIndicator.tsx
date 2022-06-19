@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-export type MTGColor = "W" | "U" | "B" | "R" | "G";
+export type MTGColor = "W" | "U" | "B" | "R" | "G" | "C";
 
 const ColorIndicator: FC<{
   color: [MTGColor] | [MTGColor, MTGColor] | null;
@@ -12,6 +12,7 @@ const ColorIndicator: FC<{
     U: "#3277a7",
     G: "#38614C",
     R: "#DA3946",
+    C: "#DEE2E3",
   };
   const MTGColorToName: Record<MTGColor, string> = {
     B: "Black",
@@ -19,6 +20,7 @@ const ColorIndicator: FC<{
     U: "Blue",
     R: "Red",
     G: "Green",
+    C: "Colorless",
   };
   if (
     color[0] === undefined ||

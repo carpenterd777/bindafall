@@ -7,6 +7,8 @@ import {
 import Head from "next/head";
 import Image from "next/image";
 import { FC, ReactNode } from "react";
+import CardSymbol from "../../../components/CardSymbol";
+import ColorIndicator, { MTGColor } from "../../../components/ColorIndicator";
 import DefaultLayout from "../../../components/DefaultLayout";
 import Footer from "../../../components/Footer";
 import Header from "../../../components/Header";
@@ -20,21 +22,61 @@ const IMAGE_HEIGHT = 523;
 const IMAGE_WIDTH = 375;
 const IMAGE_QUALITY = 45;
 
+const getMTGColorsFromString = (
+  s: string
+): [MTGColor] | [MTGColor, MTGColor] => {
+  const colors = s.split("");
+  for (const color of colors) {
+    if (!["W", "U", "B", "R", "G"].includes(color)) {
+      throw new Error("got invalid color!");
+    }
+  }
+  if (colors[0] !== undefined && colors.length === 1)
+    return [colors[0] as MTGColor];
+
+  if (colors[0] !== undefined && colors[1] !== undefined && colors.length === 2)
+    return [colors[0] as MTGColor, colors[1] as MTGColor];
+
+  throw new Error(`invalid length ${s.length}`);
+};
+
 const DataBox: FC<{
   children: ReactNode;
   top?: boolean;
   bottom?: boolean;
   italic?: boolean;
 }> = ({ children, top = false, bottom = false, italic = false }) => {
-  return (
-    <div
-      className={`px-3 py-2 lg:w-[25vw] text-left border-x ${
-        top ? "border-t" : ""
-      } ${bottom ? "border-b" : ""} ${italic ? "italic" : ""}`}
-    >
-      {children}
-    </div>
-  );
+  if (typeof children === "string") {
+    const splitAtLeft = children.split("{");
+    return (
+      <div
+        className={`px-3 py-2 lg:w-[25vw] text-left border-x ${
+          top ? "border-t" : ""
+        } ${bottom ? "border-b" : ""} ${italic ? "italic" : ""}`}
+      >
+        {splitAtLeft[0]}
+        {splitAtLeft.slice(1).map(text => {
+          const splitAtRight = text.split("}");
+          return (
+            <>
+              <CardSymbol symbol={splitAtRight[0] || "/rtr-set-symbol.png"} />
+              {splitAtRight[1] || ""}
+            </>
+          );
+        })}
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className={`px-3 py-2 lg:w-[25vw] text-left border-x ${
+          top ? "border-t" : ""
+        } ${bottom ? "border-b" : ""} ${italic ? "italic" : ""}`}
+      >
+        {children}
+      </div>
+    );
+  }
 };
 
 const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
@@ -55,13 +97,15 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <DefaultLayout>
         <div className="lg:flex flex-row justify-center">
           <div className="flex flex-col">
-            <Image
-              src={`/card_imgs/${cardData.image_file}`}
-              width={IMAGE_WIDTH}
-              height={IMAGE_HEIGHT}
-              quality={IMAGE_QUALITY}
-              priority
-            />
+            <div>
+              <Image
+                src={`/card_imgs/${cardData.image_file}`}
+                width={IMAGE_WIDTH}
+                height={IMAGE_HEIGHT}
+                quality={IMAGE_QUALITY}
+                priority
+              />
+            </div>
             {cardData.backside_file !== "" ? (
               <div className="mt-3">
                 <Image
@@ -69,7 +113,7 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
                   width={IMAGE_WIDTH}
                   height={IMAGE_HEIGHT}
                   quality={IMAGE_QUALITY}
-                ></Image>
+                />
               </div>
             ) : null}
           </div>
@@ -85,7 +129,10 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <DataBox italic>{cardData.flavor_text}</DataBox>
             ) : null}
             {cardData.power !== "" && cardData.toughness !== "" ? (
-              <DataBox top>{`${cardData.power}/${cardData.toughness}`}</DataBox>
+              <DataBox
+                top
+                bottom={!isTwoSided && cardData.illustrator_portfolio === ""}
+              >{`${cardData.power}/${cardData.toughness}`}</DataBox>
             ) : null}
             {isTwoSided ? (
               <>
@@ -98,13 +145,16 @@ const CardPage: FC<InferGetStaticPropsType<typeof getStaticProps>> = ({
                   }`}
                 </DataBox>
                 <DataBox top bottom>
-                  {`${
-                    cardData.backside_color !== ""
-                      ? cardData.backside_color +
-                        " " +
-                        cardData.backside_typeline
-                      : cardData.backside_typeline
-                  }`}
+                  <div className="flex flex-row">
+                    <ColorIndicator
+                      color={
+                        cardData.backside_color === ""
+                          ? null
+                          : getMTGColorsFromString(cardData.backside_color)
+                      }
+                    />
+                    {cardData.backside_typeline}
+                  </div>
                 </DataBox>
                 {cardData.backside_mechanics_text.split("\n").map(line => {
                   return <DataBox>{line}</DataBox>;
